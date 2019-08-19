@@ -38,6 +38,9 @@ def register():
 
 @app.route('/login', methods=["POST"])
 def login():
+    response = {}
+    response["message"] = "login failed. username or password SALAH"
+    response["data"] = {}
     body = request.json
 
     # siapin file buat di read
@@ -47,11 +50,14 @@ def login():
     for user in userData:
         if body["username"] == user["username"]:
             if body["password"] == user["password"]:
-                return "Login succes, welcome {}".format(user["fullName"])
-            else:
-                return "Login failed. Wrong password"
-    
-    return "Login failed. Username is not found"
+                response["message"]="login succses, welcome {}".format(user["fullName"])
+                response["data"] = user
+            break             
+            #     # return "Login succes, welcome {}".format(user["fullName"])
+            # else:
+            #     response["message"] = "login failed. username or password"
+                # return "Login failed. Wrong password"
+    return jsonify(response)
 
 @app.route('/users/<int:id>', methods=["GET"])
 def getUser(id):
@@ -339,7 +345,7 @@ def deleteClassWork(id):
     # return "User ID {} is not found".format(id)
 
 @app.route('/deleteclass/<int:id>', methods=["POST"])
-def deleteClass(id):l
+def deleteClass(id):
     # siapin file buat di read
     userData = getAllUsers().json
     workData = getAllClasswork().json
@@ -347,10 +353,16 @@ def deleteClass(id):l
 
     for kelas in class_Data:
         if id == kelas["classid"]:
-            workData.remove(work)
+            class_Data.remove(kelas)
     for work in workData:
-        if id in work["classwork"]:
-            kelas["classwork"].remove(id)
+        if id == work["class"]:
+            workData.remove(work)
+    for user in userData:
+        if id in user["classes_as_student"]:
+            user["classes_as_student"].remove(id)
+    for user in userData:
+        if id in user["classes_as_teacher"]:
+            user["classes_as_teacher"].remove(id)
 
                 
     usersFile = open('./classwork-file.json', 'w')
@@ -359,6 +371,9 @@ def deleteClass(id):l
     classesFile = open('./classes-file.json', 'w')
     classesFile.write(json.dumps(class_Data))
 
-    return "CLASSWORK BERHASIL DI HAPUS"
+    userFile = open('./users-file.json', 'w')
+    userFile.write(json.dumps(userData))
+
+    return "CLASS ANDA BERHASIL DI HAPUS"
 
     # return "User ID {} is not found".format(id)
