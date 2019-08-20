@@ -1,0 +1,130 @@
+[
+    {
+        "userId": 1,
+        "username": "murid1",
+        "fullName": "ayamkuuh",
+        "password": "hayam",
+        "email": "hayamabaha1@gmail.com",
+        "classes_as_student": [
+            1
+        ],
+        "classes_as_teacher": []
+    },
+    {
+        "userId": 2,
+        "username": "murid2",
+        "fullName": "bayam",
+        "password": "bayam",
+        "email": "bayam1@gmail.com",
+        "classes_as_student": [],
+        "classes_as_teacher": [
+            1,
+            2
+        ]
+    },
+    {
+        "userId": 3,
+        "username": "murid3",
+        "fullName": "caca",
+        "password": "cacah",
+        "email": "capcay@gmail.com",
+        "classes_as_student": [],
+        "classes_as_teacher": []
+    },
+    {
+        "userId": 4,
+        "username": "murid4",
+        "fullName": "doro",
+        "password": "dida",
+        "email": "doclo@gmail.com",
+        "classes_as_student": [],
+        "classes_as_teacher": [
+            3
+        ]
+    },
+    {
+        "userId": 5,
+        "username": "murid5",
+        "fullName": "ewing",
+        "password": "warta",
+        "email": "ewingHD@gmail.com",
+        "classes_as_student": [
+            3
+        ],
+        "classes_as_teacher": []
+    },
+    {
+        "userId": 7,
+        "username": "guru2",
+        "fullName": "gugun",
+        "password": "gincu",
+        "email": "guncu@gmail.com",
+        "classes_as_student": [],
+        "classes_as_teacher": []
+    },
+    {
+        "userId": 8,
+        "username": "guru3",
+        "fullName": "hari",
+        "password": "hayam",
+        "email": "hayamabaha1@gmail.com",
+        "classes_as_student": [],
+        "classes_as_teacher": [
+            3
+        ]
+    },
+    {
+        "userId": 6,
+        "username": "murid6",
+        "fullName": "Farhat",
+        "password": "abas",
+        "email": "farhats@gmail.com",
+        "classes_as_student": [],
+        "classes_as_teacher": []
+    },
+    {
+        "userId": 11,
+        "username": "murid09",
+        "fullName": "ayamkuuuuuuh",
+        "password": "hayam",
+        "email": "hayamabaha1yyyyy@gmail.com",
+        "classes_as_student": [],
+        "classes_as_teacher": []
+    },
+    {
+        "userId": 12,
+        "username": "murid11123",
+        "fullName": "kanaya1",
+        "password": "def",
+        "email": "kanayan1g@gmail.com",
+        "classes_as_student": [],
+        "classes_as_teacher": []
+    },
+    {
+        "userId": 120,
+        "username": "murid1112333455",
+        "fullName": "kanaya133",
+        "password": "def",
+        "email": "kanayat5gt1g@gmail.com",
+        "classes_as_student": [],
+        "classes_as_teacher": []
+    },
+    {
+        "userId": 130,
+        "username": "murid130",
+        "fullName": "kanaya133",
+        "password": "def",
+        "email": "kanayatsssss5gt1g@gmail.com",
+        "classes_as_student": [],
+        "classes_as_teacher": []
+    },
+    {
+        "userId": 140,
+        "username": "murid14a",
+        "fullName": "kanaya133",
+        "password": "def",
+        "email": "kanayatsssss5gt1g@gmail.com",
+        "classes_as_student": [],
+        "classes_as_teacher": []
+    }
+]
