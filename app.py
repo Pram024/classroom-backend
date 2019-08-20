@@ -9,8 +9,6 @@ app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 
 # ------------------ functions --------------------------------------
-
-
 userFileLocation = 'src/data/users-file.json'
 classFileLocation = 'src/data/classes-file.json'
 classworkFileLocation = 'src/data/classwork-file.json'
@@ -50,21 +48,11 @@ def register():
 
     if not AlreadyExist:
         response["data"] = body
-
         body["password"] = encryp(body["password"])
-
         userData.append(body)
 
         # siapin file buat di write
         writeFile(userFileLocation, userData)
-    # for user in userData:
-    #     if body["userId"] == user["userId"]:
-    #         return "ID YANG ANDA MASUKAN SUDAH ADA GAN"
-    #     elif body["username"] == user["username"]:
-    #         return "USERNAME YANG ANDA MASUKAN SUDAH ADA GAN"
-    #     elif body["email"] == user["email"]:
-    #         return "EMAIL YANG ANDA MASUKAN SUDAH ADA GAN"
-
 
     return jsonify(response)
 
@@ -130,6 +118,12 @@ def createClass():
         if class_["classid"] == body["classid"]:
             response["message"] = "Class ID {} is already exist".format(body["classid"])
             classidAlreadyExist = True
+        elif class_["classname"] == body["classname"]:
+            response["message"] = "Class Name {} is already exist".format(body["classname"])
+            classidAlreadyExist = True
+        elif class_["teachers"] == body["teachers"]:
+            response["message"] = "Teacher {} is already exist".format(body["teachers"])
+            classidAlreadyExist = True
             break
 
     if not classidAlreadyExist:
@@ -147,31 +141,9 @@ def createClass():
                 if body["teachers"] not in user["classes_as_teacher"]:
                     user["classes_as_teacher"].append(body["classid"])
         
-
         writeFile(userFileLocation, usersTeac)
 
     return jsonify(response)
-    # # for class_ in classesData:
-    #     if body["classname"] == class_["classname"]:
-    #         return "CLASS YANG ANDA MASUKAN SUDAH ADA GAN"
-
-    # for class_ in classesData:
-    #     if body["classid"] == class_["classid"]:
-    #         return "GANTI NO CLASSIDNYA KARENA KELAS SUDAH ADA TEACHERNYA"
-
-    # for class_ in classesData:
-    #     if body["teachers"] == class_["teachers"]:
-    #         return "GANTI TEACHER KARENA KELAS SUDAH ADA TEACHERNYA"
-
-    # classesData.append(body)
-
-
-
-    #     # usersData = readFile(userFileLocation)
-    #     for user in usersData:
-    #         if user["userid"] == body["teacher"]:
-    #             user["classes_as_teacher"].append(body["classid"])
-
 @app.route('/class/<int:id>', methods=["GET"])
 def getClass(id):
     response = {}
@@ -213,24 +185,23 @@ def joinClass():
  
     # nambahin userid ke classes-file
     classesData = readFile(classFileLocation)
+    usersData = readFile(userFileLocation)
 
     for class_ in classesData:
         if body["classid"] == class_["classid"]:
             if body["userId"] not in class_["students"]:
                 class_["students"].append(body["userId"])
-    
-    writeFile(userFileLocation, classesData)
-
+    writeFile(classFileLocation, classesData)
     # nambahin class_as_student ke users-file\
-    usersData = readFile(userFileLocation)
 
     for user in usersData:
         if body["userId"] == user["userId"]:
             if body["classid"] not in user["classes_as_student"]:
                 user["classes_as_student"].append(body["classid"])
+    # userFile.close()
     
     writeFile(userFileLocation, usersData)
-    # userFile.close()
+
     return "success"
 
 @app.route('/updateUser/<int:id>', methods=["PUT"])
@@ -389,9 +360,11 @@ def deleteClass(id):
     for kelas in class_Data:
         if id == kelas["classid"]:
             class_Data.remove(kelas)
+            
     for work in workData:
         if id == work["class"]:
             workData.remove(work)
+            break
     for user in userData:
         if id in user["classes_as_student"]:
             user["classes_as_student"].remove(id)
@@ -399,12 +372,10 @@ def deleteClass(id):
         if id in user["classes_as_teacher"]:
             user["classes_as_teacher"].remove(id)
 
-                
-    writeFile(userFileLocation, workData)
-
     writeFile(userFileLocation, class_Data)
-
+    writeFile(userFileLocation, workData)
     writeFile(userFileLocation, userData)
+            
 
     return "CLASS ANDA BERHASIL DI HAPUS"
 
