@@ -183,41 +183,53 @@ def getAllClasses():
 def joinClass():
     body = request.json
  
+    response = {}
+    response["message"] = "JOIN CLASS SUKSES"
+    response["data"] = {} 
+
     # nambahin userid ke classes-file
     classesData = readFile(classFileLocation)
     usersData = readFile(userFileLocation)
 
+    AlreadyExist = False
     for class_ in classesData:
         if body["classid"] == class_["classid"]:
-            if body["userId"] not in class_["students"]:
-                class_["students"].append(body["userId"])
-    writeFile(classFileLocation, classesData)
-    # nambahin class_as_student ke users-file\
-
+            if body["userId"] in class_["students"]:
+                response["message"] = "Class ID {} is already exist".format(body["classid"])
+                AlreadyExist = True
+                break
     for user in usersData:
         if body["userId"] == user["userId"]:
-            if body["classid"] not in user["classes_as_student"]:
-                user["classes_as_student"].append(body["classid"])
-    # userFile.close()
-    
-    writeFile(userFileLocation, usersData)
+            if body["classid"] in user["classes_as_student"]:
+                response["message"] = "user ID {} is already exist".format(body["userId"])
+                AlreadyExist = True
+    if not AlreadyExist:
+        response["data"] = body
+        class_["students"].append(body["userId"])
+        user["classes_as_student"].append(body["classid"])
+        writeFile(classFileLocation, classesData)
+        writeFile(userFileLocation, usersData)
 
-    return "success"
+    return jsonify(response)
 
 @app.route('/updateUser/<int:id>', methods=["PUT"])
 def updateUser(id):
     userData = getAllUsers().json
     body = request.json
+    response = {}
+    response["message"] = "GAGAL UPDATE"
+    response["data"] = {}
 
     for user in userData:
         if id == user["userId"]:
             user["username"] = body["username"]
             user["fullName"] = body["fullName"]
-            user["password"] = body["password"]
+            user["password"] = encryp(body["password"])
             user["email"] = body["email"]
-            
+            response["message"]="update dengan ID {} berhasil".format(id)
+            response["data"] = user
     writeFile(userFileLocation, userData)
-    return jsonify(body)
+    return jsonify(response)
 
 @app.route('/updateClass/<int:id>', methods=["PUT"])
 def updateClass(id):
