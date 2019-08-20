@@ -228,7 +228,7 @@ def updateClass(id):
         if id == class_["classid"]:
             class_["classname"] = body["classname"]
             
-    writeFile(userFileLocation, class_Data)
+    writeFile(classFileLocation, class_Data)
     return jsonify(body)
 
 @app.route('/classwork', methods=["POST"])
@@ -248,7 +248,7 @@ def creatClassWork():
     workData.append(body)
     
     # siapin file buat di write
-    writeFile(userFileLocation, workData)
+    writeFile(classworkFileLocation, workData)
 
             
   # menambahkan classworkid di classwork yang ada di database classes-file
@@ -257,7 +257,7 @@ def creatClassWork():
         if body["class"] == class_["classid"]:
             if body["classworkid"] not in class_["classwork"]:
                 class_["classwork"].append(body["classworkid"])           
-    writeFile(userFileLocation, classesData)
+    writeFile(classFileLocation, classesData)
 
     return jsonify(workData)
 
@@ -290,7 +290,7 @@ def assignClassWork(id):
         if id == work["classworkid"]:
             work["answers"].append(body)
     
-    writeFile(userFileLocation, workData)
+    writeFile(classworkFileLocation, workData)
 
     return "TUGAS ANDA TELAH BERHASIL DIKIRIM"
 
@@ -303,7 +303,7 @@ def updateclasswork(id):
         if id == work["classworkid"]:
             work["question"] = body["question"]
             
-    writeFile(userFileLocation, workData)
+    writeFile(classworkFileLocation, workData)
     return "UPDATE QUESTION ANDA BERHASIL"
 
 @app.route('/outclass/<int:id>', methods=["POST"])
@@ -322,7 +322,7 @@ def outClass(id):
 
     writeFile(userFileLocation, userData)
 
-    writeFile(userFileLocation, class_Data)
+    writeFile(classFileLocation, class_Data)
 
     return "ANDA TELAH KELUAR KELAS"
 
@@ -342,9 +342,9 @@ def deleteClassWork(id):
             kelas["classwork"].remove(id)
 
                 
-    writeFile(userFileLocation, workData)
+    writeFile(classworkFileLocation, workData)
 
-    writeFile(userFileLocation, class_Data)
+    writeFile(classFileLocation, class_Data)
 
     return "CLASSWORK BERHASIL DI HAPUS"
 
@@ -372,8 +372,8 @@ def deleteClass(id):
         if id in user["classes_as_teacher"]:
             user["classes_as_teacher"].remove(id)
 
-    writeFile(userFileLocation, class_Data)
-    writeFile(userFileLocation, workData)
+    writeFile(classFileLocation, class_Data)
+    writeFile(classworkFileLocation, workData)
     writeFile(userFileLocation, userData)
             
 
