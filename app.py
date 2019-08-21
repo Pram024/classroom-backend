@@ -236,12 +236,17 @@ def updateClass(id):
     class_Data = getAllClasses().json
     body = request.json
 
+    response = {}
+    response["message"] = "GAGAL UPDATE"
+    response["data"] = {}
+
     for class_ in class_Data:
         if id == class_["classid"]:
             class_["classname"] = body["classname"]
-            
+            response["message"]="update dengan Class ID {} berhasil".format(id)
+            response["data"] = class_
     writeFile(classFileLocation, class_Data)
-    return jsonify(body)
+    return jsonify(response)
 
 @app.route('/classwork', methods=["POST"])
 def creatClassWork():
