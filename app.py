@@ -144,6 +144,7 @@ def createClass():
         writeFile(userFileLocation, usersTeac)
 
     return jsonify(response)
+
 @app.route('/class/<int:id>', methods=["GET"])
 def getClass(id):
     response = {}
@@ -254,29 +255,35 @@ def creatClassWork():
 
     # kalau file users-file.json udah ada, di read dulu. kalau file ga ada, ga usah di read, langsung write
     workData = readFile(classworkFileLocation)
-  
-
     body = request.json
+    
+    response = {}
+    response["message"] = "Creat classwork SUKSES"
+    response["data"] = {}
+
+    classworkAlreadyExist = False
     for work in workData:
         if body["classworkid"] == work["classworkid"]:
-            return "ID ANDA MASUKAN SUDAH ADA GAN"
-   
-    body["answers"]=[]
-    workData.append(body)
+            response["message"] = "Classwork ID {} is already exist".format(body["classworkid"])
+            classworkAlreadyExist = True
+            break
+    if not classworkAlreadyExist: 
+        body["answers"]=[]
+        workData.append(body)
     
-    # siapin file buat di write
-    writeFile(classworkFileLocation, workData)
+        # siapin file buat di write
+        writeFile(classworkFileLocation, workData)
 
-            
-  # menambahkan classworkid di classwork yang ada di database classes-file
-    classesData = readFile(classFileLocation)
-    for class_ in classesData:
-        if body["class"] == class_["classid"]:
-            if body["classworkid"] not in class_["classwork"]:
-                class_["classwork"].append(body["classworkid"])           
-    writeFile(classFileLocation, classesData)
+                
+        # menambahkan classworkid di classwork yang ada di database classes-file
+        classesData = readFile(classFileLocation)
+        for class_ in classesData:
+            if body["class"] == class_["classid"]:
+                if body["classworkid"] not in class_["classwork"]:
+                    class_["classwork"].append(body["classworkid"])           
+        writeFile(classFileLocation, classesData)
 
-    return jsonify(workData)
+    return jsonify(response)
 
 @app.route('/classwork/<int:id>', methods=["GET"])
 def getclasswork(id):
