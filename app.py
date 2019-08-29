@@ -1,5 +1,6 @@
 from flask import Flask, request, json, jsonify
 import os
+from flask_cors import CORS
 
 from src.utils.fungsi import readFile, writeFile
 from src.utils.crypt import encryp, decryp
@@ -7,7 +8,7 @@ from src.utils.authorization import encode
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
-
+CORS(app)
 # ------------------ functions --------------------------------------
 userFileLocation = 'src/data/users-file.json'
 classFileLocation = 'src/data/classes-file.json'
@@ -61,7 +62,10 @@ def login():
     response = {}
     response["message"] = "login failed. username or password SALAH"
     response["data"] = {}
+    statusCode = 400
+
     body = request.json
+
 
     # siapin file buat di read
     userData = readFile(userFileLocation)
@@ -71,9 +75,10 @@ def login():
             if body["password"] == decryp(user["password"]):
                 response["message"]="login succses, welcome {}".format(user["fullName"])
                 response["data"] = user
+                statusCode = 200
                 # response["token"] = encode(response["data"])
             break             
-    return jsonify(response)
+    return jsonify(response), statusCode
 
 @app.route('/users/<int:id>', methods=["GET"])
 def getUser(id):
@@ -280,7 +285,7 @@ def creatClassWork():
         for class_ in classesData:
             if body["class"] == class_["classid"]:
                 if body["classworkid"] not in class_["classwork"]:
-                    class_["classwork"].append(body["classworkid"])           
+                    class_["classwork"].append(body)           
         writeFile(classFileLocation, classesData)
 
     return jsonify(response)
@@ -288,13 +293,13 @@ def creatClassWork():
 @app.route('/classwork/<int:id>', methods=["GET"])
 def getclasswork(id):
     # siapin file buat di read
-    userData = readFile(userFileLocation)
+    workData = readFile(classworkFileLocation)
 
-    for work in userData:
+    for work in workData:
         if id == work["classworkid"]:
             return jsonify(work)
 
-    return "User ID {} is not found".format(id)
+    return "ClassWork ID {} is not found".format(id)
 
 @app.route('/classworks', methods=["GET"])
 def getAllClasswork():
@@ -306,17 +311,22 @@ def getAllClasswork():
 @app.route('/assignclasswork/<int:id>', methods=["POST"])
 def assignClassWork(id):
     body = request.json
- 
+    
+    response = {}
+    response["message"] = "Input Jawaban Sukses"
+    response["data"] = {} 
+
     # nambahin userid ke classes-file
     workData = readFile(classworkFileLocation)
 
     for work in workData:
         if id == work["classworkid"]:
             work["answers"].append(body)
+            response["data"] = work
     
     writeFile(classworkFileLocation, workData)
 
-    return "TUGAS ANDA TELAH BERHASIL DIKIRIM"
+    return jsonify(response)
 
 @app.route('/updateclasswork/<int:id>', methods=["PUT"])
 def updateclasswork(id):
